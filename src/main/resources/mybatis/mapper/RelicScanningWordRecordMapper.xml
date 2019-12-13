@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.museum.dao.RelicScanningWordRecordMapper">
+    <resultMap id="BaseResultMap" type="com.example.museum.po.RelicScanningWordRecordPO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="relic_scanning_id" jdbcType="BIGINT" property="relicScanningId"/>
+        <result column="relic_name" jdbcType="VARCHAR" property="relicName"/>
+        <result column="relic_no" jdbcType="VARCHAR" property="relicNo"/>
+        <result column="project_name" jdbcType="VARCHAR" property="projectName" />
+        <result column="project_time" jdbcType="VARCHAR" property="projectTime" />
+        <result column="word_path" jdbcType="VARCHAR" property="wordPath"/>
+        <result column="word_name" jdbcType="VARCHAR" property="wordName"/>
+        <result column="word_url" jdbcType="VARCHAR" property="wordUrl"/>
+        <result column="create_user_id" jdbcType="BIGINT" property="createUserId"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+      id, relic_scanning_id, relic_name, relic_no, project_name, project_time, word_path, word_name, word_url, create_user_id, create_time
+    </sql>
+
+    <insert id="insertSelective" parameterType="com.example.museum.po.RelicScanningWordRecordPO">
+        <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER">
+            SELECT
+            LAST_INSERT_ID()
+        </selectKey>
+        insert into relic_scanning_word_record_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="relicScanningId != null">
+                relic_scanning_id,
+            </if>
+            <if test="relicName != null">
+                relic_name,
+            </if>
+            <if test="relicNo != null">
+                relic_no,
+            </if>
+            <if test="projectName != null">
+                project_name,
+            </if>
+            <if test="projectTime != null">
+                project_time,
+            </if>
+            <if test="wordPath != null">
+                word_path,
+            </if>
+            <if test="wordName != null">
+                word_name,
+            </if>
+            <if test="wordUrl != null">
+                word_url,
+            </if>
+            <if test="createUserId != null">
+                create_user_id,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="relicScanningId != null">
+                #{relicScanningId,jdbcType=BIGINT},
+            </if>
+            <if test="relicName != null">
+                #{relicName,jdbcType=VARCHAR},
+            </if>
+            <if test="relicNo != null">
+                #{relicNo,jdbcType=VARCHAR},
+            </if>
+            <if test="projectName != null">
+                #{projectName,jdbcType=VARCHAR},
+            </if>
+            <if test="projectTime != null">
+                #{projectTime,jdbcType=VARCHAR},
+            </if>
+            <if test="wordPath != null">
+                #{wordPath,jdbcType=VARCHAR},
+            </if>
+            <if test="wordName != null">
+                #{wordName,jdbcType=VARCHAR},
+            </if>
+            <if test="wordUrl != null">
+                #{wordUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="createUserId != null">
+                #{createUserId,jdbcType=BIGINT},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from relic_scanning_word_record_info
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="getRecordByScanningId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from relic_scanning_word_record_info
+        where relic_scanning_id = #{relicScanningId,jdbcType=BIGINT}
+    </select>
+</mapper>

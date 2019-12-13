@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.museum.dao.RelicReportLossMapper">
+
+    <resultMap id="BaseResultMap" type="com.example.museum.po.RelicReportLossPO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="relic_id" jdbcType="BIGINT" property="relicId"/>
+        <result column="relic_name" jdbcType="VARCHAR" property="relicName"/>
+        <result column="reimburse_time" jdbcType="VARCHAR" property="reimburseTime"/>
+        <result column="reason" jdbcType="VARCHAR" property="reason"/>
+        <result column="user_id" jdbcType="BIGINT" property="userId"/>
+        <result column="user_name" jdbcType="VARCHAR" property="userName"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="status" jdbcType="TINYINT" property="status"/>
+        <result column="repair_user_id" jdbcType="BIGINT" property="repairUserId"/>
+        <result column="repair_user_name" jdbcType="VARCHAR" property="repairUserName"/>
+        <result column="repair_time" jdbcType="VARCHAR" property="repairTime"/>
+        <result column="repair_reason" jdbcType="VARCHAR" property="repairReason"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+    id, relic_id, relic_name, reimburse_time, reason, user_id, user_name, create_time, 
+    status, repair_user_id, repair_user_name, repair_time, repair_reason
+  </sql>
+
+    <insert id="save" parameterType="com.example.museum.po.RelicReportLossPO">
+        insert into relic_report_loss_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="relicId != null">
+                relic_id,
+            </if>
+            <if test="relicName != null">
+                relic_name,
+            </if>
+            <if test="reimburseTime != null">
+                reimburse_time,
+            </if>
+            <if test="reason != null">
+                reason,
+            </if>
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="userName != null">
+                user_name,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="repairUserId != null">
+                repair_user_id,
+            </if>
+            <if test="repairUserName != null">
+                repair_user_name,
+            </if>
+            <if test="repairTime != null">
+                repair_time,
+            </if>
+            <if test="repairReason != null">
+                repair_reason,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="relicId != null">
+                #{relicId,jdbcType=BIGINT},
+            </if>
+            <if test="relicName != null">
+                #{relicName,jdbcType=VARCHAR},
+            </if>
+            <if test="reimburseTime != null">
+                #{reimburseTime,jdbcType=VARCHAR},
+            </if>
+            <if test="reason != null">
+                #{reason,jdbcType=VARCHAR},
+            </if>
+            <if test="userId != null">
+                #{userId,jdbcType=BIGINT},
+            </if>
+            <if test="userName != null">
+                #{userName,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=TINYINT},
+            </if>
+            <if test="repairUserId != null">
+                #{repairUserId,jdbcType=BIGINT},
+            </if>
+            <if test="repairUserName != null">
+                #{repairUserName,jdbcType=VARCHAR},
+            </if>
+            <if test="repairTime != null">
+                #{repairTime,jdbcType=VARCHAR},
+            </if>
+            <if test="repairReason != null">
+                #{repairReason,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <select id="getById" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from relic_report_loss_info
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <update id="setReimburseStatus">
+    update relic_report_loss_info set
+    status = #{status}
+    where id = #{id}
+  </update>
+
+    <update id="setRepairStatus">
+        update relic_report_loss_info
+        <set>
+            status = #{status,jdbcType=TINYINT},
+            repair_user_id = #{repairUserId,jdbcType=BIGINT},
+            repair_user_name = #{repairUserName,jdbcType=VARCHAR},
+            repair_time = #{repairTime,jdbcType=VARCHAR},
+            <if test="repairReason != null">
+                repair_reason = #{repairReason,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <sql id="page_sql">
+        <if test="param.status != null ">
+            and t.status = #{param.status}
+        </if>
+        <if test="param.relicName != null and param.relicName != ''">
+            and t.relic_name LIKE CONCAT('%',#{param.relicName},'%')
+        </if>
+        <if test="param.relicNo != null and param.relicNo != ''">
+            and t.relic_no LIKE CONCAT('%',#{param.relicNo},'%')
+        </if>
+    </sql>
+
+    <select id="listCount" resultType="int">
+        select count(1)
+        from relic_report_loss_info t
+        WHERE 1 = 1
+        <include refid="page_sql"/>
+    </select>
+
+    <select id="pageList" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from relic_report_loss_info t
+        WHERE 1 = 1
+        <include refid="page_sql"/>
+        order by t.create_time desc
+        LIMIT #{page.limitOneValue},#{page.pageSize}
+    </select>
+
+    <select id="lossByIdsList" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from relic_report_loss_info t
+        WHERE id in
+        <foreach collection="ids" open="(" close=")" item="id" separator=",">
+            #{id}
+        </foreach>
+    </select>
+
+    <select id="lossByRelicIdList" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from relic_report_loss_info t
+        WHERE relic_id = #{relicId}
+    </select>
+</mapper>

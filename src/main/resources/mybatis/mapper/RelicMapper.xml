@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.museum.dao.RelicMapper">
+    <resultMap id="BaseResultMap" type="com.example.museum.po.RelicPO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="relic_name" jdbcType="VARCHAR" property="relicName"/>
+        <result column="relic_no" jdbcType="VARCHAR" property="relicNo"/>
+        <result column="years" jdbcType="VARCHAR" property="years"/>
+        <result column="source" jdbcType="VARCHAR" property="source"/>
+        <result column="grade" jdbcType="VARCHAR" property="grade"/>
+        <result column="dimensions" jdbcType="VARCHAR" property="dimensions"/>
+        <result column="relic_type" jdbcType="VARCHAR" property="relicType"/>
+        <result column="texture" jdbcType="VARCHAR" property="texture"/>
+        <result column="collection_company" jdbcType="VARCHAR" property="collectionCompany"/>
+        <result column="collection_time" jdbcType="VARCHAR" property="collectionTime"/>
+        <result column="manufacture" jdbcType="VARCHAR" property="manufacture"/>
+        <result column="textile" jdbcType="VARCHAR" property="textile"/>
+        <result column="compress_img_url" jdbcType="VARCHAR" property="compressImgUrl"/>
+        <result column="img_url" jdbcType="VARCHAR" property="imgUrl"/>
+        <result column="repair_status" jdbcType="TINYINT" property="repairStatus"/>
+        <result column="stock_status" jdbcType="TINYINT" property="stockStatus"/>
+        <result column="create_user_id" jdbcType="BIGINT" property="createUserId"/>
+        <result column="update_user_id" jdbcType="BIGINT" property="updateUserId"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+    id, relic_name, relic_no, years, source, grade, dimensions, relic_type,
+    texture, collection_company, collection_time, manufacture, textile, compress_img_url, img_url,
+    repair_status, stock_status, create_user_id,
+    update_user_id, create_time, update_time
+  </sql>
+
+
+    <insert id="insertSelective" parameterType="com.example.museum.po.RelicPO">
+        <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER">
+            SELECT
+            LAST_INSERT_ID()
+        </selectKey>
+        insert into relic_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="relicName != null">
+                relic_name,
+            </if>
+            <if test="relicNo != null">
+                relic_no,
+            </if>
+            <if test="years != null">
+                years,
+            </if>
+            <if test="source != null">
+                source,
+            </if>
+            <if test="grade != null">
+                grade,
+            </if>
+            <if test="dimensions != null">
+                dimensions,
+            </if>
+            <if test="relicType != null">
+                relic_type,
+            </if>
+            <if test="texture != null">
+                texture,
+            </if>
+            <if test="collectionCompany != null">
+                collection_company,
+            </if>
+            <if test="collectionTime != null">
+                collection_time,
+            </if>
+            <if test="manufacture != null">
+                manufacture,
+            </if>
+            <if test="textile != null">
+                textile,
+            </if>
+            <if test="compressImgUrl != null">
+                compress_img_url,
+            </if>
+            <if test="imgUrl != null">
+                img_url,
+            </if>
+            <if test="createUserId != null">
+                create_user_id,
+            </if>
+            <if test="updateUserId != null">
+                update_user_id,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="relicName != null">
+                #{relicName,jdbcType=VARCHAR},
+            </if>
+            <if test="relicNo != null">
+                #{relicNo,jdbcType=VARCHAR},
+            </if>
+            <if test="years != null">
+                #{years,jdbcType=VARCHAR},
+            </if>
+            <if test="source != null">
+                #{source,jdbcType=VARCHAR},
+            </if>
+            <if test="grade != null">
+                #{grade,jdbcType=VARCHAR},
+            </if>
+            <if test="dimensions != null">
+                #{dimensions,jdbcType=VARCHAR},
+            </if>
+            <if test="relicType != null">
+                #{relicType,jdbcType=VARCHAR},
+            </if>
+            <if test="texture != null">
+                #{texture,jdbcType=VARCHAR},
+            </if>
+            <if test="collectionCompany != null">
+                #{collectionCompany,jdbcType=VARCHAR},
+            </if>
+            <if test="collectionTime != null">
+                #{collectionTime,jdbcType=VARCHAR},
+            </if>
+            <if test="manufacture != null">
+                #{manufacture,jdbcType=VARCHAR},
+            </if>
+            <if test="textile != null">
+                #{textile,jdbcType=VARCHAR},
+            </if>
+            <if test="compressImgUrl != null">
+                #{compressImgUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="imgUrl != null">
+                #{imgUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="createUserId != null">
+                #{createUserId,jdbcType=BIGINT},
+            </if>
+            <if test="updateUserId != null">
+                #{updateUserId,jdbcType=BIGINT},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from relic_info
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="selectByRelicName" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from relic_info
+        where relic_name = #{relicName,jdbcType=VARCHAR}
+    </select>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.example.museum.po.RelicPO">
+        update relic_info
+        <set>
+            <if test="relicName != null">
+                relic_name = #{relicName,jdbcType=VARCHAR},
+            </if>
+            <if test="relicNo != null">
+                relic_no = #{relicNo,jdbcType=VARCHAR},
+            </if>
+            <if test="years != null">
+                years = #{years,jdbcType=VARCHAR},
+            </if>
+            <if test="source != null">
+                source = #{source,jdbcType=VARCHAR},
+            </if>
+            <if test="grade != null">
+                grade = #{grade,jdbcType=VARCHAR},
+            </if>
+            <if test="dimensions != null">
+                dimensions = #{dimensions,jdbcType=VARCHAR},
+            </if>
+            <if test="relicType != null">
+                relic_type = #{relicType,jdbcType=VARCHAR},
+            </if>
+            <if test="texture != null">
+                texture = #{texture,jdbcType=VARCHAR},
+            </if>
+            <if test="collectionCompany != null">
+                collection_company = #{collectionCompany,jdbcType=VARCHAR},
+            </if>
+            <if test="collectionTime != null">
+                collection_time = #{collectionTime,jdbcType=VARCHAR},
+            </if>
+            <if test="manufacture != null">
+                manufacture = #{manufacture,jdbcType=VARCHAR},
+            </if>
+            <if test="textile != null">
+                textile = #{textile,jdbcType=VARCHAR},
+            </if>
+            <if test="compressImgUrl != null">
+                compress_img_url = #{compressImgUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="imgUrl != null">
+                img_url = #{imgUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="createUserId != null">
+                create_user_id = #{createUserId,jdbcType=BIGINT},
+            </if>
+            <if test="updateUserId != null">
+                update_user_id = #{updateUserId,jdbcType=BIGINT},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+
+    <update id="setRepairStatus">
+        update relic_info set repair_status = #{repairStatus} where id = #{id}
+    </update>
+
+    <update id="setStockStatus">
+        update relic_info set stock_status = #{stockStatus} where id = #{id}
+    </update>
+
+    <sql id="page_sql">
+        <if test="param.relicName != null and param.relicName != ''">
+            and relic_name LIKE CONCAT('%',#{param.relicName,jdbcType=VARCHAR},'%')
+        </if>
+        <if test="param.relicNo != null and param.relicNo != ''">
+            and relic_no LIKE CONCAT('%',#{param.relicNo,jdbcType=VARCHAR},'%')
+        </if>
+        <if test="param.years != null and param.years != ''">
+            and years LIKE CONCAT('%',#{param.years,jdbcType=VARCHAR},'%')
+        </if>
+        <if test="param.source != null and param.source != ''">
+            and source LIKE CONCAT('%',#{param.source,jdbcType=VARCHAR},'%')
+        </if>
+        <if test="param.grade != null and param.grade != ''">
+            and grade LIKE CONCAT('%',#{param.grade,jdbcType=VARCHAR},'%')
+        </if>
+        <if test="param.dimensions != null and param.dimensions != ''">
+            and dimensions LIKE CONCAT('%',#{param.dimensions,jdbcType=VARCHAR},'%')
+        </if>
+        <if test="param.relicType != null and param.relicType != ''">
+            and relic_type LIKE CONCAT('%',#{param.relicType,jdbcType=VARCHAR},'%')
+        </if>
+        <if test="param.texture != null and param.texture != ''">
+            and texture LIKE CONCAT('%',#{param.texture,jdbcType=VARCHAR},'%')
+        </if>
+        <if test="param.collectionCompany != null and param.collectionCompany != ''">
+            and collection_company LIKE CONCAT('%',#{param.collectionCompany,jdbcType=VARCHAR},'%')
+        </if>
+        <if test="param.collectionTime != null and param.collectionTime != ''">
+            and collection_time LIKE CONCAT('%',#{param.collectionTime,jdbcType=VARCHAR},'%')
+        </if>
+        <if test="param.manufacture != null and param.manufacture != ''">
+            and manufacture LIKE CONCAT('%',#{param.manufacture,jdbcType=VARCHAR},'%')
+        </if>
+        <if test="param.textile != null and param.textile != ''">
+            and textile LIKE CONCAT('%',#{param.textile,jdbcType=VARCHAR},'%')
+        </if>
+    </sql>
+
+    <select id="listCount" resultType="int">
+        select count(1)
+        from relic_info
+        WHERE 1 = 1
+        <include refid="page_sql"/>
+    </select>
+
+    <select id="pageList" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from relic_info
+        WHERE 1 = 1
+        <include refid="page_sql"/>
+        order by id desc
+        LIMIT #{page.limitOneValue},#{page.pageSize}
+    </select>
+</mapper>

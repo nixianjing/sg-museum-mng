@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.museum.dao.AdminRoleMapper">
+
+    <resultMap id="BaseResultMap" type="com.example.museum.po.AdminRolePO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="role_code" jdbcType="VARCHAR" property="roleCode"/>
+        <result column="role_name" jdbcType="VARCHAR" property="roleName"/>
+        <result column="status" jdbcType="TINYINT" property="status"/>
+        <result column="data_flag" jdbcType="TINYINT" property="dataFlag"/>
+        <result column="remark" jdbcType="VARCHAR" property="remark"/>
+        <result column="create_user_id" jdbcType="BIGINT" property="createUserId"/>
+        <result column="update_user_id" jdbcType="BIGINT" property="updateUserId"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+
+    <resultMap id="BaseDtoResultMap" type="com.example.museum.dto.AdminRoleDTO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="role_code" jdbcType="VARCHAR" property="roleCode"/>
+        <result column="role_name" jdbcType="VARCHAR" property="roleName"/>
+        <result column="status" jdbcType="TINYINT" property="status"/>
+        <result column="data_flag" jdbcType="TINYINT" property="dataFlag"/>
+        <result column="remark" jdbcType="VARCHAR" property="remark"/>
+        <result column="create_user_name" jdbcType="VARCHAR" property="createUserName"/>
+        <result column="update_user_name" jdbcType="VARCHAR" property="updateUserName"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+    id, role_code, role_name, status, data_flag, remark, create_user_id,
+    update_user_id, create_time, update_time
+    </sql>
+
+    <insert id="insert" parameterType="com.example.museum.po.AdminRolePO">
+    insert into admin_role_info (role_code, role_name,
+      status, data_flag, remark,
+      create_user_id, update_user_id,
+      create_time, update_time)
+    values (#{roleCode,jdbcType=VARCHAR}, #{roleName,jdbcType=VARCHAR},
+      #{status,jdbcType=TINYINT}, #{dataFlag,jdbcType=TINYINT}, #{remark,jdbcType=VARCHAR},
+      #{createUserId,jdbcType=BIGINT}, #{updateUserId,jdbcType=BIGINT},
+      SYSDATE(), SYSDATE())
+    </insert>
+
+    <insert id="insertSelective" parameterType="com.example.museum.po.AdminRolePO">
+        insert into admin_role_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="roleCode != null and roleCode != ''">
+                role_code,
+            </if>
+            <if test="roleName != null and roleName != ''">
+                role_name,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="dataFlag != null">
+                data_flag,
+            </if>
+            <if test="remark != null and remark != ''">
+                remark,
+            </if>
+            <if test="createUserId != null">
+                create_user_id,
+            </if>
+            <if test="updateUserId != null">
+                modify_user_id,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="update_time != null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="roleCode != null and roleCode != ''">
+                #{roleCode,jdbcType=VARCHAR},
+            </if>
+            <if test="roleName != null and roleName != ''">
+                #{roleName,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=TINYINT},
+            </if>
+            <if test="dataFlag != null">
+                #{dataFlag,jdbcType=TINYINT},
+            </if>
+            <if test="remark != null and remark != ''">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="createUserId != null">
+                #{createUserId,jdbcType=BIGINT},
+            </if>
+            <if test="updateUserId != null">
+                #{updateUserId,jdbcType=BIGINT},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+
+    <select id="getById" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from admin_role_info
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="findById" parameterType="java.lang.Long" resultMap="BaseDtoResultMap">
+        select
+        r.id, r.role_code, r.role_name, r.status, r.data_flag, r.remark,
+        (select u.name from admin_user_info u where u.id = create_user_id ) as create_user_name,
+        (select u.name from admin_user_info u where u.id = update_user_id) as update_user_name,
+        r.create_time, r.update_time
+        from admin_role_info r
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="getByRoleCode" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from admin_role_info
+        where role_code = #{roleCode,jdbcType=VARCHAR}
+    </select>
+
+    <update id="batchDelete">
+        update admin_role_info set data_flag = 1, update_user_id = #{updateUserId,jdbcType=BIGINT},
+        update_time = SYSDATE()
+        where id in
+        <foreach collection="ids" open="(" close=")" item="id" separator=",">
+            #{id}
+        </foreach>
+    </update>
+
+    <update id="batchUpdateStatus">
+        update admin_role_info set status = #{status,jdbcType=TINYINT}, update_user_id =
+        #{updateUserId,jdbcType=BIGINT},
+        update_time = SYSDATE()
+        where
+        <foreach collection="ids" open="(" close=")" item="id" separator=",">
+            #{id}
+        </foreach>
+    </update>
+
+    <update id="update">
+        update admin_role_info
+        <set>
+            <if test="param.roleName != null and param.roleName != ''">
+                role_name = #{param.roleName,jdbcType=VARCHAR},
+            </if>
+            <if test="param.status != null">
+                status = #{param.status,jdbcType=TINYINT},
+            </if>
+            <if test="param.dataFlag != null">
+                data_flag = #{param.dataFlag,jdbcType=TINYINT},
+            </if>
+            <if test="param.remark != null and param.remark != ''">
+                remark = #{param.remark,jdbcType=VARCHAR},
+            </if>
+            <if test="param.updateUserId != null">
+                update_user_id = #{param.updateUserId,jdbcType=BIGINT},
+            </if>
+            <if test="param.updateTime != null">
+                update_time = #{param.updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{param.id,jdbcType=BIGINT}
+    </update>
+
+    <select id="getList" resultType="com.example.museum.po.AdminRolePO">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM admin_role_info
+        WHERE data_flag = 0 and status = 0
+        <if test="roleCodes != null">
+            and role_code in
+            <foreach collection="roleCodes" open="(" close=")" item="roleCode" separator=",">
+                #{roleCode}
+            </foreach>
+        </if>
+    </select>
+
+    <sql id="page_sql">
+        <if test="param.roleCode != null and param.roleCode !=''">
+            and role_code LIKE CONCAT('%',#{param.roleCode},'%')
+        </if>
+        <if test="param.roleName != null and param.roleName !=''">
+            and role_name LIKE CONCAT('%',#{param.roleName},'%')
+        </if>
+        <if test="param.status != null">
+            and status = #{param.status}
+        </if>
+    </sql>
+
+    <select id="listCount" resultType="int">
+        select count(1)
+        from admin_role_info t
+        WHERE data_flag = 0
+        <include refid="page_sql"/>
+    </select>
+
+    <select id="pageList" resultMap="BaseDtoResultMap">
+        select
+        r.id, r.role_code, r.role_name, r.status, r.data_flag, r.remark,
+        (select u.name from admin_user_info u where u.id = create_user_id ) as create_user_name,
+        (select u.name from admin_user_info u where u.id = update_user_id) as update_user_name,
+        r.create_time, r.update_time
+        from admin_role_info r
+        WHERE data_flag = 0
+        <include refid="page_sql"/>
+        order by r.update_time desc
+        LIMIT #{page.limitOneValue},#{page.pageSize}
+    </select>
+
+</mapper>

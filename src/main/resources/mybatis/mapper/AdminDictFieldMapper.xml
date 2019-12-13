@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.museum.dao.AdminDictFieldMapper">
+    <resultMap id="BaseResultMap" type="com.example.museum.po.AdminDictFieldPO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="dict_type_code" jdbcType="VARCHAR" property="dictTypeCode"/>
+        <result column="dict_type_name" jdbcType="VARCHAR" property="dictTypeName"/>
+        <result column="dict_name" jdbcType="VARCHAR" property="dictName"/>
+        <result column="sort" jdbcType="INTEGER" property="sort"/>
+        <result column="status" jdbcType="TINYINT" property="status"/>
+        <result column="data_flag" jdbcType="TINYINT" property="dataFlag"/>
+        <result column="update_user_id" jdbcType="BIGINT" property="updateUserId"/>
+        <result column="create_user_id" jdbcType="BIGINT" property="createUserId"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+    id, dict_type_code,
+    (select name from admin_dict_type_info where code = dict_type_code) as dict_type_name,
+    dict_name, sort, status, data_flag, update_user_id, create_user_id,
+    create_time, update_time
+  </sql>
+
+    <insert id="insert" parameterType="com.example.museum.po.AdminDictFieldPO">
+    insert into admin_dict_field_info (id, dict_type_code, dict_name,
+      sort, status, data_flag,
+      update_user_id, create_user_id, create_time,
+      update_time)
+    values (#{id,jdbcType=BIGINT}, #{dictTypeCode,jdbcType=VARCHAR}, #{dictName,jdbcType=VARCHAR},
+      #{sort,jdbcType=INTEGER}, #{status,jdbcType=TINYINT}, #{dataFlag,jdbcType=TINYINT},
+      #{updateUserId,jdbcType=BIGINT}, #{createUserId,jdbcType=BIGINT}, SYSDATE(),
+      SYSDATE())
+  </insert>
+
+    <select id="getById" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from admin_dict_field_info
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <update id="update">
+        update admin_dict_field_info
+        <set>
+            <if test="param.dictTypeCode != null and param.dictTypeCode != ''">
+                dict_type_code = #{param.dictTypeCode},
+            </if>
+            <if test="param.dictName != null and param.dictName != ''">
+                dict_name = #{param.dictName,jdbcType=VARCHAR},
+            </if>
+            <if test="param.sort != null">
+                sort = #{param.sort,jdbcType=INTEGER},
+            </if>
+            <if test="param.status != null">
+                status = #{param.status,jdbcType=TINYINT},
+            </if>
+            <if test="param.dataFlag != null">
+                data_flag = #{param.dataFlag,jdbcType=TINYINT},
+            </if>
+            <if test="param.updateUserId != null">
+                update_user_id = #{param.updateUserId,jdbcType=BIGINT},
+            </if>
+            <if test="param.updateTime != null">
+                update_time = #{param.updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{param.id,jdbcType=BIGINT}
+    </update>
+
+    <select id="pageCount" resultType="int">
+        select count(1)
+        from admin_dict_field_info
+        WHERE data_flag = 0 and status = 0
+        <if test="dictTypeCode != null and dictTypeCode != ''">
+            and dict_type_code = #{dictTypeCode,jdbcType=VARCHAR}
+        </if>
+        <if test="dictName != null and dictName != ''">
+            and dict_name = #{dictName,jdbcType=VARCHAR}
+        </if>
+    </select>
+
+    <select id="pageList" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from admin_dict_field_info
+        WHERE data_flag = 0 and status = 0
+        <if test="dictTypeCode != null and dictTypeCode != ''">
+            and dict_type_code = #{dictTypeCode,jdbcType=VARCHAR}
+        </if>
+        <if test="dictName != null and dictName != ''">
+            and dict_name = #{dictName,jdbcType=VARCHAR}
+        </if>
+        order by sort asc
+        LIMIT #{page.limitOneValue},#{page.pageSize}
+    </select>
+
+    <select id="list" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from admin_dict_field_info
+        WHERE data_flag = 0 and status = 0
+        <if test="dictTypeCode != null and dictTypeCode != ''">
+            and dict_type_code = #{dictTypeCode,jdbcType=VARCHAR}
+        </if>
+        <if test="dictName != null and dictName != ''">
+            and dict_name = #{dictName,jdbcType=VARCHAR}
+        </if>
+        order by sort asc
+    </select>
+</mapper>

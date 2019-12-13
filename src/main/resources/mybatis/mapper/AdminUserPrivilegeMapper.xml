@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.museum.dao.AdminUserPrivilegeMapper">
+
+    <resultMap id="BaseResultMap" type="com.example.museum.po.AdminUserPrivilegePO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="admin_user_id" jdbcType="BIGINT" property="adminUserId"/>
+        <result column="privilege_code" jdbcType="VARCHAR" property="privilegeCode"/>
+        <result column="data_flag" jdbcType="TINYINT" property="dataFlag"/>
+        <result column="create_user_id" jdbcType="BIGINT" property="createUserId"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_user_id" jdbcType="BIGINT" property="updateUserId"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, admin_user_id, privilege_code, data_flag, create_user_id, create_time, update_user_id,
+        update_time
+    </sql>
+
+    <insert id="batchInsert">
+        insert into admin_user_privilege_info (admin_user_id, privilege_code,
+        data_flag, create_user_id, create_time,
+        update_user_id, update_time)
+        values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.adminUserId,jdbcType=BIGINT}, #{item.privilegeCode,jdbcType=VARCHAR},
+            #{item.dataFlag,jdbcType=TINYINT}, #{item.createUserId,jdbcType=BIGINT},
+            #{item.createTime,jdbcType=TIMESTAMP},
+            #{item.updateUserId,jdbcType=BIGINT}, #{item.updateTime,jdbcType=TIMESTAMP})
+        </foreach>
+    </insert>
+
+    <update id="batchDelete">
+        update admin_user_privilege_info set data_flag = 1, update_user_id = {updateUserId,jdbcType=BIGINT},
+        update_time = #{updateTime,jdbcType=TIMESTAMP}
+        where id in
+        <foreach collection="ids" open="(" close=")" item="id" separator=",">
+            #{id}
+        </foreach>
+    </update>
+
+    <update id="deleteByAdminUserId">
+        update admin_user_privilege_info
+        set
+        data_flag = 1,
+        update_user_id = #{updateUserId},
+        update_time = SYSDATE()
+        where data_flag = 0 and admin_user_id = #{adminUserId,jdbcType=BIGINT}
+    </update>
+
+    <select id="list" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from admin_user_privilege_info
+        where admin_user_id = #{adminUserId,jdbcType=BIGINT}
+        and data_flag = 0
+    </select>
+</mapper>

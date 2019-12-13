@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.museum.dao.RelicScanningImgMapper">
+    <resultMap id="BaseResultMap" type="com.example.museum.po.RelicScanningImgPO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="relic_scanning_id" jdbcType="BIGINT" property="relicScanningId"/>
+        <result column="type" jdbcType="VARCHAR" property="type"/>
+        <result column="img_path" jdbcType="VARCHAR" property="imgPath"/>
+        <result column="img_name" jdbcType="VARCHAR" property="imgName"/>
+        <result column="compress_img_url" jdbcType="VARCHAR" property="compressImgUrl"/>
+        <result column="img_url" jdbcType="VARCHAR" property="imgUrl"/>
+        <result column="relic_explain" jdbcType="VARCHAR" property="relicExplain"/>
+        <result column="status" jdbcType="TINYINT" property="status"/>
+        <result column="is_img" jdbcType="TINYINT" property="isImg"/>
+        <result column="create_user_id" jdbcType="BIGINT" property="createUserId"/>
+        <result column="update_user_id" jdbcType="BIGINT" property="updateUserId"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+    id, relic_scanning_id, type, img_path, img_name, compress_img_url, img_url, relic_explain, status, is_img, create_user_id, update_user_id, create_time, update_time
+  </sql>
+
+    <insert id="insertSelective" parameterType="com.example.museum.po.RelicScanningImgPO">
+        <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER">
+            SELECT
+            LAST_INSERT_ID()
+        </selectKey>
+        insert into relic_scanning_img_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="relicScanningId != null">
+                relic_scanning_id,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="imgPath != null">
+                img_path,
+            </if>
+            <if test="imgName != null">
+                img_name,
+            </if>
+            <if test="compressImgUrl != null">
+                compress_img_url,
+            </if>
+            <if test="imgUrl != null">
+                img_url,
+            </if>
+            <if test="relicExplain != null">
+                relic_explain,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="isImg != null">
+                is_img,
+            </if>
+            <if test="createUserId != null">
+                create_user_id,
+            </if>
+            <if test="updateUserId != null">
+                update_user_id,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="relicScanningId != null">
+                #{relicScanningId,jdbcType=BIGINT},
+            </if>
+            <if test="type != null">
+                #{type,jdbcType=VARCHAR},
+            </if>
+            <if test="imgPath != null">
+                #{imgPath,jdbcType=VARCHAR},
+            </if>
+            <if test="imgName != null">
+                #{imgName,jdbcType=VARCHAR},
+            </if>
+            <if test="compressImgUrl != null">
+                #{compressImgUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="imgUrl != null">
+                #{imgUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="relicExplain != null">
+                #{relicExplain,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=TINYINT},
+            </if>
+            <if test="isImg != null">
+                #{isImg,jdbcType=TINYINT},
+            </if>
+            <if test="createUserId != null">
+                #{createUserId,jdbcType=BIGINT},
+            </if>
+            <if test="updateUserId != null">
+                #{updateUserId,jdbcType=BIGINT},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+
+    <insert id="batchInsert">
+        insert into relic_scanning_img_info (relic_scanning_id, type, img_path, img_name,
+        compress_img_url, img_url, relic_explain,status,
+        create_user_id, update_user_id, create_time, update_time)
+        values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.relicScanningId,jdbcType=BIGINT}, #{item.type,jdbcType=VARCHAR},
+            #{item.imgPath,jdbcType=VARCHAR}, #{item.imgName,jdbcType=VARCHAR},
+            #{item.compressImgUrl,jdbcType=VARCHAR}, #{item.imgUrl,jdbcType=VARCHAR},
+            #{item.relicExplain,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT},
+            #{userId,jdbcType=BIGINT},#{userId,jdbcType=BIGINT},
+            #{createTime,jdbcType=TIMESTAMP},#{createTime,jdbcType=TIMESTAMP})
+        </foreach>
+    </insert>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from relic_scanning_img_info
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+
+    <update id="updateDescribeById">
+    update relic_scanning_img_info set
+    relic_explain = #{relicExplain,jdbcType=VARCHAR},
+    update_user_id = #{updateUserId,jdbcType=BIGINT},
+    update_time = SYSDATE()
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+    <update id="deleteById">
+    update relic_scanning_img_info set
+    status = 1,
+    update_user_id = #{updateUserId,jdbcType=BIGINT},
+    update_time = SYSDATE()
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+    <select id="getImgByScanningId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from relic_scanning_img_info
+        where status = 0
+        and relic_scanning_id = #{relicScanningId,jdbcType=BIGINT}
+        <if test="type != null and type != ''">
+            and type = #{type,jdbcType=VARCHAR}
+        </if>
+        <if test="isImg != null">
+            and is_img = #{isImg}
+        </if>
+    </select>
+</mapper>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.museum.dao.BusinessUpdateLogsMapper">
+    <resultMap id="BaseResultMap" type="com.example.museum.po.BusinessUpdateLogsPO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="business_type" jdbcType="TINYINT" property="businessType"/>
+        <result column="update_type" jdbcType="VARCHAR" property="updateType"/>
+        <result column="update_type_message" jdbcType="VARCHAR" property="updateTypeMessage"/>
+        <result column="old_content_json" jdbcType="LONGVARCHAR" property="oldContentJson"/>
+        <result column="new_content_json" jdbcType="LONGVARCHAR" property="newContentJson"/>
+        <result column="update_user_id" jdbcType="BIGINT" property="updateUserId"/>
+        <result column="update_user_name" jdbcType="VARCHAR" property="updateUserName"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+    id, business_type, update_type, update_type_message, old_content_json, new_content_json, update_user_id, update_user_name, update_time
+  </sql>
+
+    <sql id="Blob_Column_List">
+
+    </sql>
+
+    <insert id="insert" parameterType="com.example.museum.po.BusinessUpdateLogsPO">
+    insert into business_update_logs_info (id, business_type, update_type, update_type_message,
+      update_user_id, update_user_name, update_time,
+      old_content_json, new_content_json)
+    values (#{id,jdbcType=BIGINT}, #{businessType,jdbcType=TINYINT}, #{updateType,jdbcType=VARCHAR},#{updateTypeMessage,jdbcType=VARCHAR},
+      #{updateUserId,jdbcType=BIGINT}, #{updateUserName,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP},
+      #{oldContentJson,jdbcType=LONGVARCHAR}, #{newContentJson,jdbcType=LONGVARCHAR})
+  </insert>
+
+    <select id="getById" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from business_update_logs_info
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <sql id="page_sql">
+        <if test="param.businessType != null ">
+            and business_type = #{param.businessType}
+        </if>
+        <if test="param.updateType != null">
+            and update_type = #{param.updateType}
+        </if>
+        <if test="param.updateUserName != null and param.updateUserName !=''">
+            and update_user_name LIKE CONCAT('%',#{param.updateUserName},'%')
+        </if>
+    </sql>
+
+    <select id="listCount" resultType="int">
+        select
+        count(1)
+        from business_update_logs_info
+        where 1 = 1
+        <include refid="page_sql"/>
+    </select>
+
+    <select id="pageList" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from business_update_logs_info
+        where 1 = 1
+        <include refid="page_sql"/>
+        order by update_time desc
+        LIMIT #{page.limitOneValue},#{page.pageSize}
+    </select>
+</mapper>
